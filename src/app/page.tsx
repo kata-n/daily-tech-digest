@@ -5,6 +5,7 @@ import { QuizQuestion } from "@/types";
 import QuizCard from "@/components/QuizCard";
 import Loading from "@/components/Loading";
 import Pagination from "@/components/Pagination";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const ITEMS_PER_PAGE = 3;
 
@@ -49,23 +50,26 @@ export default function Home() {
     return <div className="text-red-500 text-center py-8">{error}</div>;
 
   return (
-    <main className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-center mb-8">
-        Daily Tech Quiz - 今日の技術クイズ
-      </h1>
+    <main className="min-h-screen bg-background-light dark:bg-background-dark transition-colors duration-300">
+      <ThemeToggle />
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold text-center mb-8 text-gray-900 dark:text-white">
+          Daily Tech Quiz - 今日の技術クイズ
+        </h1>
 
-      <div className="max-w-3xl mx-auto">
-        {currentQuizzes.map((quiz) => (
-          <QuizCard key={quiz.id} quiz={quiz} />
-        ))}
+        <div className="max-w-3xl mx-auto">
+          {currentQuizzes.map((quiz) => (
+            <QuizCard key={quiz.id} quiz={quiz} />
+          ))}
 
-        {quizzes.length > ITEMS_PER_PAGE && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
-        )}
+          {quizzes.length > ITEMS_PER_PAGE && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
+          )}
+        </div>
       </div>
     </main>
   );
