@@ -1,15 +1,15 @@
-export type MDNArticle = {
+export type QuizQuestion = {
   id: string;
-  title: string;
-  url: string;
-  summary: string;
+  question: string;
+  choices: string[];
+  correctAnswer: number;
+  explanation: string;
   category: "HTML" | "CSS" | "JavaScript" | "Web API";
-  publishedAt: string;
 };
 
 export type APIResponse = {
   success: boolean;
-  data?: MDNArticle[];
+  data?: QuizQuestion[];
   error?: string;
 };
 

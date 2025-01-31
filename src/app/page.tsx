@@ -1,48 +1,48 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { MDNArticle } from "@/types";
-import ArticleCard from "@/components/ArticleCard";
+import { QuizQuestion } from "@/types";
+import QuizCard from "@/components/QuizCard";
 import Loading from "@/components/Loading";
 import Pagination from "@/components/Pagination";
 
 const ITEMS_PER_PAGE = 3;
 
 export default function Home() {
-  const [articles, setArticles] = useState<MDNArticle[]>([]);
+  const [quizzes, setQuizzes] = useState<QuizQuestion[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    async function fetchArticles() {
+    async function fetchQuizzes() {
       try {
         setLoading(true);
         setError(null);
 
-        const response = await fetch("/api/articles");
+        const response = await fetch("/api/quiz");
         const data = await response.json();
 
         if (!data.success) {
-          throw new Error(data.error || "記事の取得に失敗しました");
+          throw new Error(data.error || "クイズの取得に失敗しました");
         }
 
-        setArticles(data.data);
+        setQuizzes(data.data);
       } catch (error) {
-        console.error("Error fetching articles:", error);
-        setError("記事の取得に失敗しました");
+        console.error("Error fetching quizzes:", error);
+        setError("クイズの取得に失敗しました");
       } finally {
         setLoading(false);
       }
     }
 
-    fetchArticles();
+    fetchQuizzes();
   }, []);
 
-  const totalPages = Math.ceil(articles.length / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(quizzes.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
-  const currentArticles = articles.slice(startIndex, endIndex);
+  const currentQuizzes = quizzes.slice(startIndex, endIndex);
 
   if (loading) return <Loading />;
   if (error)
@@ -51,15 +51,15 @@ export default function Home() {
   return (
     <main className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-center mb-8">
-        Daily Tech Digest - MDN要約
+        Daily Tech Quiz - 今日の技術クイズ
       </h1>
 
       <div className="max-w-3xl mx-auto">
-        {currentArticles.map((article) => (
-          <ArticleCard key={article.id} article={article} />
+        {currentQuizzes.map((quiz) => (
+          <QuizCard key={quiz.id} quiz={quiz} />
         ))}
 
-        {articles.length > ITEMS_PER_PAGE && (
+        {quizzes.length > ITEMS_PER_PAGE && (
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
