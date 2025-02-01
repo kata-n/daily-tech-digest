@@ -1,8 +1,35 @@
 import { useState } from "react";
 import { QuizQuestion } from "@/types";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import type { Components } from "react-markdown";
 
 type QuizCardProps = {
   quiz: QuizQuestion;
+};
+
+type CodeProps = {
+  node?: any;
+  inline?: boolean;
+  className?: string;
+  children?: React.ReactNode;
+};
+
+const MarkdownComponents: Components = {
+  code: ({ node, inline, className, children, ...props }: CodeProps) => {
+    return (
+      <code
+        className={`${
+          inline
+            ? "bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded"
+            : "block bg-gray-100 dark:bg-gray-800 p-3 rounded-md my-2 overflow-x-auto"
+        } font-mono text-sm`}
+        {...props}
+      >
+        {children}
+      </code>
+    );
+  },
 };
 
 export default function QuizCard({ quiz }: QuizCardProps) {
@@ -19,10 +46,15 @@ export default function QuizCard({ quiz }: QuizCardProps) {
   return (
     <div className="bg-card-light dark:bg-card-dark rounded-lg shadow-md p-6 mb-4 transition-colors duration-300">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-bold text-gray-800 dark:text-white">
-          {quiz.question}
+        <h2 className="text-xl font-bold text-gray-800 dark:text-white flex-1 mr-4">
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            components={MarkdownComponents}
+          >
+            {quiz.question}
+          </ReactMarkdown>
         </h2>
-        <span className="px-3 py-1 text-sm bg-blue-100/80 dark:bg-blue-900/30 text-blue-800 dark:text-blue-100 rounded-full">
+        <span className="px-3 py-1 text-sm bg-blue-100/80 dark:bg-blue-900/30 text-blue-800 dark:text-blue-100 rounded-full whitespace-nowrap">
           {quiz.category}
         </span>
       </div>
@@ -46,7 +78,12 @@ export default function QuizCard({ quiz }: QuizCardProps) {
               ${showExplanation && "cursor-default"}
             `}
           >
-            {choice}
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={MarkdownComponents}
+            >
+              {choice}
+            </ReactMarkdown>
           </button>
         ))}
       </div>
@@ -60,7 +97,12 @@ export default function QuizCard({ quiz }: QuizCardProps) {
           }`}
         >
           <p className="font-bold mb-2">{isCorrect ? "正解！" : "不正解..."}</p>
-          <p className="text-gray-700 dark:text-gray-300">{quiz.explanation}</p>
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            components={MarkdownComponents}
+          >
+            {quiz.explanation}
+          </ReactMarkdown>
         </div>
       )}
     </div>

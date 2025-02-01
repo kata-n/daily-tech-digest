@@ -9,13 +9,10 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 export async function generateQuiz(
   category: string,
-  count: number = 3
+  count: number = 5
 ): Promise<QuizQuestion[]> {
   try {
-    const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash-exp",
-      generationConfig: { responseMimeType: "application/json" },
-    });
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
     const prompt = `
       ${category}に関する技術的なクイズを${count}問作成してください。
@@ -24,24 +21,26 @@ export async function generateQuiz(
       {
         "questions": [
           {
-            "question": "問題文",
+            "question": "問題文（コードを含む場合は\`\`\`言語名\\nコード\\n\`\`\`の形式で記述）",
             "choices": ["選択肢1", "選択肢2", "選択肢3", "選択肢4"],
             "correctAnswer": 0,
-            "explanation": "解説文"
+            "explanation": "解説文（コードを含む場合は\`\`\`言語名\\nコード\\n\`\`\`の形式で記述）"
           }
         ]
       }
 
       条件：
-      - 問題は初級から中級レベル
+      - 問題は中級レベル以上
+      - フロントエンジニアとして経験がある人が問題を理解できるような内容
       - 選択肢は必ず4つ
       - 解説は200文字程度で、なぜその答えが正解なのかを説明
       - 実務で役立つような内容
+      - コードを含む問題の場合は、必ずMarkdownのコードブロック記法を使用
+      - コードブロックには適切な言語名を指定（js, javascript, typescript, html, css など）
     `;
 
     const result = await model.generateContent(prompt);
     const response = await result.response;
-    console.log(response);
     const jsonStr = response.text();
 
     try {
