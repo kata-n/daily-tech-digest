@@ -11,14 +11,13 @@ type QuizCardProps = {
 };
 
 type CodeProps = {
-  node?: any;
   inline?: boolean;
   className?: string;
   children?: React.ReactNode;
 };
 
 const MarkdownComponents: Components = {
-  code: ({ node, inline, className, children, ...props }: CodeProps) => {
+  code: ({ inline, className, children, ...props }: CodeProps) => {
     const match = /language-(\w+)/.exec(className || "");
     const lang = match ? match[1] : "typescript";
 

@@ -8,6 +8,13 @@ if (!process.env.GEMINI_API_KEY) {
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
+interface RawQuizQuestion {
+  question: string;
+  choices: string[];
+  correctAnswer: string;
+  explanation: string;
+}
+
 export async function generateQuiz(
   category: string,
   count: number = 5
@@ -25,7 +32,7 @@ export async function generateQuiz(
 
     try {
       const data = JSON.parse(jsonStr);
-      return data.questions.map((q: any, index: number) => ({
+      return data.questions.map((q: RawQuizQuestion, index: number) => ({
         id: `${category}-${index}`,
         question: q.question,
         choices: q.choices,
