@@ -3,6 +3,8 @@ import { QuizQuestion } from "@/types";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import type { Components } from "react-markdown";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { oneDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
 type QuizCardProps = {
   quiz: QuizQuestion;
@@ -17,13 +19,21 @@ type CodeProps = {
 
 const MarkdownComponents: Components = {
   code: ({ node, inline, className, children, ...props }: CodeProps) => {
-    return (
+    const match = /language-(\w+)/.exec(className || "");
+    const lang = match ? match[1] : "typescript";
+
+    return !inline ? (
+      <SyntaxHighlighter
+        style={oneDark}
+        language={lang}
+        PreTag="div"
+        className="rounded-md my-2"
+      >
+        {String(children).replace(/\n$/, "")}
+      </SyntaxHighlighter>
+    ) : (
       <code
-        className={`${
-          inline
-            ? "bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded"
-            : "block bg-gray-100 dark:bg-gray-800 p-3 rounded-md my-2 overflow-x-auto"
-        } font-mono text-sm`}
+        className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded font-mono text-sm"
         {...props}
       >
         {children}
@@ -45,8 +55,11 @@ export default function QuizCard({ quiz }: QuizCardProps) {
 
   return (
     <div className="bg-card-light dark:bg-card-dark rounded-lg shadow-md p-6 mb-4 transition-colors duration-300">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-bold text-gray-800 dark:text-white flex-1 mr-4">
+      <span className="px-3 py-1 text-sm bg-blue-100/80 dark:bg-blue-900/30 text-blue-800 dark:text-blue-100 rounded-full shrink-0">
+        {quiz.category}
+      </span>
+      <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
+        <h2 className="text-xl font-bold text-gray-800 dark:text-white flex-grow">
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={MarkdownComponents}
@@ -54,9 +67,6 @@ export default function QuizCard({ quiz }: QuizCardProps) {
             {quiz.question}
           </ReactMarkdown>
         </h2>
-        <span className="px-3 py-1 text-sm bg-blue-100/80 dark:bg-blue-900/30 text-blue-800 dark:text-blue-100 rounded-full whitespace-nowrap">
-          {quiz.category}
-        </span>
       </div>
 
       <div className="space-y-3 mb-4">
