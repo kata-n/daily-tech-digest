@@ -40,6 +40,7 @@ const MarkdownComponents: Components = {
       </code>
     );
   },
+  p: ({ children }) => <div className="m-2">{children}</div>,
 };
 
 export default function QuizCard({ quiz }: QuizCardProps) {
@@ -106,7 +107,9 @@ export default function QuizCard({ quiz }: QuizCardProps) {
               : "bg-red-100/60 dark:bg-red-900/20 text-red-800 dark:text-red-100"
           }`}
         >
-          <p className="font-bold mb-2">{isCorrect ? "正解！" : "不正解..."}</p>
+          <div className="font-bold mb-2">
+            {isCorrect ? "正解！" : "不正解..."}
+          </div>
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={MarkdownComponents}

@@ -4,16 +4,12 @@ import { useEffect, useState } from "react";
 import { QuizQuestion } from "@/types";
 import QuizCard from "@/components/QuizCard";
 import Loading from "@/components/Loading";
-import Pagination from "@/components/Pagination";
 import ThemeToggle from "@/components/ThemeToggle";
-
-const ITEMS_PER_PAGE = 3;
 
 export default function Home() {
   const [quizzes, setQuizzes] = useState<QuizQuestion[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     async function fetchQuizzes() {
@@ -40,11 +36,6 @@ export default function Home() {
     fetchQuizzes();
   }, []);
 
-  const totalPages = Math.ceil(quizzes.length / ITEMS_PER_PAGE);
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const endIndex = startIndex + ITEMS_PER_PAGE;
-  const currentQuizzes = quizzes.slice(startIndex, endIndex);
-
   if (loading) return <Loading />;
   if (error)
     return <div className="text-red-500 text-center py-8">{error}</div>;
@@ -57,18 +48,10 @@ export default function Home() {
           Daily Tech Quiz - 今日の技術クイズ
         </h1>
 
-        <div className="max-w-3xl mx-auto">
-          {currentQuizzes.map((quiz) => (
+        <div className="max-w-3xl mx-auto space-y-6">
+          {quizzes.map((quiz) => (
             <QuizCard key={quiz.id} quiz={quiz} />
           ))}
-
-          {quizzes.length > ITEMS_PER_PAGE && (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-            />
-          )}
         </div>
       </div>
     </main>

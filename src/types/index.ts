@@ -12,9 +12,3 @@ export type APIResponse = {
   data?: QuizQuestion[];
   error?: string;
 };
-
-export type PaginationProps = {
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
-};
