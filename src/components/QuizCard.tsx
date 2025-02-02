@@ -8,6 +8,7 @@ import { oneDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
 type QuizCardProps = {
   quiz: QuizQuestion;
+  onAnswer: (isCorrect: boolean) => void;
 };
 
 type CodeProps = {
@@ -48,11 +49,17 @@ const MarkdownComponents: Components = {
   p: ({ children }) => <div className="my-2">{children}</div>,
 };
 
-export default function QuizCard({ quiz }: QuizCardProps) {
+export default function QuizCard({ quiz, onAnswer }: QuizCardProps) {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showExplanation, setShowExplanation] = useState(false);
+  const [hasAnswered, setHasAnswered] = useState(false);
 
   const handleAnswer = (index: number) => {
+    if (!hasAnswered) {
+      const isCorrect = index === quiz.correctAnswer;
+      onAnswer(isCorrect);
+      setHasAnswered(true);
+    }
     setSelectedAnswer(index);
     setShowExplanation(true);
   };
