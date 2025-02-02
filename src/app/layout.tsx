@@ -18,6 +18,22 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.svg",
   },
+  openGraph: {
+    title: "Daily Tech Quiz",
+    description: "今日の技術クイズ",
+    images: [
+      {
+        url: "/ogp.png",
+        width: 1200,
+        height: 630,
+      },
+    ],
+  },
+  twitter: {
+    title: "Daily Tech Quiz",
+    description: "今日の技術クイズ",
+    images: ["/ogp.png"],
+  },
 };
 
 export default function RootLayout({
