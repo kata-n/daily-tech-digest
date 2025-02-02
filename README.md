@@ -88,4 +88,4 @@ PR や Issue は大歓迎です！
 
 ---
 
-Made with ❤️ by [Your Name]
+Made with ❤️ by [@kata](https://github.com/kata-n)
