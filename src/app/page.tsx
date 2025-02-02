@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { QuizQuestion, QuizDifficulty } from "@/types";
 import QuizCard from "@/components/QuizCard";
 import Loading from "@/components/Loading";
