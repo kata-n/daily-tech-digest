@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎯 Daily Tech Quiz
 
-## Getting Started
+毎日の技術力向上をサポートする、モダンなクイズアプリケーション。HTML、CSS、JavaScript、Web API の知識をインタラクティブに学習できます。
 
-First, run the development server:
+![Daily Tech Quiz Screenshot](public/ogp.png)
+
+## ✨ 特徴
+
+- 🎨 美しい UI/UX デザイン
+- 🌓 ダークモード対応
+- 📱 完全レスポンシブ
+- 🤖 Google Gemini AI による問題生成
+- 🎯 3 段階の難易度選択
+
+## 🛠️ 技術スタック
+
+- **フレームワーク:** Next.js 15 (App Router)
+- **言語:** TypeScript
+- **スタイリング:** Tailwind CSS
+- **AI:** Google Gemini 2.0
+- **デプロイ:** Vercel
+
+## 🚀 はじめ方
+
+1. リポジトリをクローン:
+
+```bash
+git clone https://github.com/yourusername/daily-tech-digest.git
+cd daily-tech-digest
+```
+
+2. 依存関係をインストール:
+
+```bash
+npm install
+```
+
+3. 環境変数を設定:
+
+```bash
+cp .env.example .env.local
+# .env.localにGemini APIキーを設定
+```
+
+4. 開発サーバーを起動:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🎮 使い方
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. 難易度を選択（初級/中級/上級）
+2. 「はじめる」をクリック
+3. クイズに回答
+4. 結果を確認
+5. 学習履歴を記録
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🌟 機能詳細
 
-## Learn More
+### 難易度レベル
 
-To learn more about Next.js, take a look at the following resources:
+- **初級:** 基本的な概念と一般的な使用方法
+- **中級:** 実務でよく遭遇する問題と最適化
+- **上級:** 高度な概念と最新の機能
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### クイズの種類
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- HTML
+- CSS
+- JavaScript
+- Web API
 
-## Deploy on Vercel
+### UI/UX
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- スケルトンローディング
+- アニメーションエフェクト
+- インタラクティブなフィードバック
+- コードブロックのシンタックスハイライト
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📝 ライセンス
+
+MIT
+
+## 👥 コントリビューション
+
+PR や Issue は大歓迎です！
+
+---
+
+Made with ❤️ by [Your Name]
