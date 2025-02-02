@@ -1,3 +1,5 @@
+export type QuizDifficulty = "beginner" | "intermediate" | "advanced";
+
 export type QuizQuestion = {
   id: string;
   question: string;
@@ -5,6 +7,7 @@ export type QuizQuestion = {
   correctAnswer: number;
   explanation: string;
   category: "HTML" | "CSS" | "JavaScript" | "Web API";
+  difficulty: QuizDifficulty;
 };
 
 export type APIResponse = {
