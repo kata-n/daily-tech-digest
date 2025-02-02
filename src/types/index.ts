@@ -1,3 +1,5 @@
+export type QuizDifficulty = "beginner" | "intermediate" | "advanced";
+
 export type QuizQuestion = {
   id: string;
   question: string;
@@ -5,16 +7,11 @@ export type QuizQuestion = {
   correctAnswer: number;
   explanation: string;
   category: "HTML" | "CSS" | "JavaScript" | "Web API";
+  difficulty: QuizDifficulty;
 };
 
 export type APIResponse = {
   success: boolean;
   data?: QuizQuestion[];
   error?: string;
-};
-
-export type PaginationProps = {
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
 };

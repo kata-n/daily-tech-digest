@@ -1,75 +1,107 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { QuizQuestion } from "@/types";
+import { QuizQuestion, QuizDifficulty } from "@/types";
 import QuizCard from "@/components/QuizCard";
 import Loading from "@/components/Loading";
-import Pagination from "@/components/Pagination";
 import ThemeToggle from "@/components/ThemeToggle";
-
-const ITEMS_PER_PAGE = 3;
+import DifficultySelector from "@/components/DifficultySelector";
 
 export default function Home() {
   const [quizzes, setQuizzes] = useState<QuizQuestion[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [difficulty, setDifficulty] = useState<QuizDifficulty>("intermediate");
+  const [started, setStarted] = useState(false);
 
-  useEffect(() => {
-    async function fetchQuizzes() {
-      try {
-        setLoading(true);
-        setError(null);
+  const fetchQuizzes = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      setQuizzes([]);
 
-        const response = await fetch("/api/quiz");
-        const data = await response.json();
+      const response = await fetch(`/api/quiz?difficulty=${difficulty}`);
+      const data = await response.json();
 
-        if (!data.success) {
-          throw new Error(data.error || "クイズの取得に失敗しました");
-        }
-
-        setQuizzes(data.data);
-      } catch (error) {
-        console.error("Error fetching quizzes:", error);
-        setError("クイズの取得に失敗しました");
-      } finally {
-        setLoading(false);
+      if (!data.success) {
+        throw new Error(data.error || "クイズの取得に失敗しました");
       }
+
+      setQuizzes(data.data);
+      setStarted(true);
+    } catch (error) {
+      console.error("Error fetching quizzes:", error);
+      setError("クイズの取得に失敗しました");
+    } finally {
+      setLoading(false);
     }
+  };
 
+  const handleStart = () => {
     fetchQuizzes();
-  }, []);
+  };
 
-  const totalPages = Math.ceil(quizzes.length / ITEMS_PER_PAGE);
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const endIndex = startIndex + ITEMS_PER_PAGE;
-  const currentQuizzes = quizzes.slice(startIndex, endIndex);
-
-  if (loading) return <Loading />;
-  if (error)
-    return <div className="text-red-500 text-center py-8">{error}</div>;
+  const handleDifficultyChange = (newDifficulty: QuizDifficulty) => {
+    setDifficulty(newDifficulty);
+  };
 
   return (
     <main className="min-h-screen bg-background-light dark:bg-background-dark transition-colors duration-300">
       <ThemeToggle />
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-center mb-8 text-gray-900 dark:text-white">
+      <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8 text-gray-900 dark:text-white px-4">
           Daily Tech Quiz - 今日の技術クイズ
         </h1>
 
-        <div className="max-w-3xl mx-auto">
-          {currentQuizzes.map((quiz) => (
-            <QuizCard key={quiz.id} quiz={quiz} />
-          ))}
+        {!started ? (
+          <div className="max-w-xl mx-auto space-y-8 p-6 bg-card-light dark:bg-card-dark rounded-lg shadow-md">
+            <div>
+              <h2 className="text-xl font-bold mb-4 text-center text-gray-800 dark:text-white">
+                難易度を選択してください
+              </h2>
+              <DifficultySelector
+                difficulty={difficulty}
+                onChange={handleDifficultyChange}
+                disabled={loading}
+              />
+            </div>
+            <div className="flex justify-center">
+              <button
+                onClick={handleStart}
+                disabled={loading}
+                className="px-8 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-full font-bold transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                はじめる
+              </button>
+            </div>
+          </div>
+        ) : (
+          <>
+            <div className="mb-8">
+              <DifficultySelector
+                difficulty={difficulty}
+                onChange={(newDifficulty) => {
+                  setDifficulty(newDifficulty);
+                  fetchQuizzes();
+                }}
+                disabled={loading}
+              />
+            </div>
 
-          {quizzes.length > ITEMS_PER_PAGE && (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-            />
-          )}
-        </div>
+            {loading && <Loading />}
+            {error && (
+              <div className="text-red-500 text-center py-8">{error}</div>
+            )}
+
+            {!loading && !error && (
+              <div className="max-w-3xl mx-auto space-y-4 sm:space-y-6">
+                {quizzes.map((quiz) => (
+                  <QuizCard key={quiz.id} quiz={quiz} />
+                ))}
+              </div>
+            )}
+          </>
+        )}
       </div>
     </main>
   );

@@ -1,12 +1,15 @@
 import { NextResponse } from "next/server";
 import { generateQuiz } from "@/utils/gemini";
+import { QuizDifficulty } from "@/types";
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const category = searchParams.get("category") || getTodayCategory();
+    const difficulty = (searchParams.get("difficulty") ||
+      "intermediate") as QuizDifficulty;
 
-    const questions = await generateQuiz(category);
+    const questions = await generateQuiz(category, 5, difficulty);
 
     return NextResponse.json({
       success: true,

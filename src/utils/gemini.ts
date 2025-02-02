@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { QuizQuestion } from "@/types";
+import { QuizQuestion, QuizDifficulty } from "@/types";
 import { getQuizPrompt } from "./prompts";
 
 if (!process.env.GEMINI_API_KEY) {
@@ -8,16 +8,24 @@ if (!process.env.GEMINI_API_KEY) {
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
+interface RawQuizQuestion {
+  question: string;
+  choices: string[];
+  correctAnswer: string;
+  explanation: string;
+}
+
 export async function generateQuiz(
   category: string,
-  count: number = 5
+  count: number = 5,
+  difficulty: QuizDifficulty = "intermediate"
 ): Promise<QuizQuestion[]> {
   try {
     const model = genAI.getGenerativeModel({
       model: "gemini-2.0-flash-exp",
       generationConfig: { responseMimeType: "application/json" },
     });
-    const prompt = getQuizPrompt(category, count);
+    const prompt = getQuizPrompt(category, count, difficulty);
 
     const result = await model.generateContent(prompt);
     const response = await result.response;
@@ -25,13 +33,14 @@ export async function generateQuiz(
 
     try {
       const data = JSON.parse(jsonStr);
-      return data.questions.map((q: any, index: number) => ({
+      return data.questions.map((q: RawQuizQuestion, index: number) => ({
         id: `${category}-${index}`,
         question: q.question,
         choices: q.choices,
         correctAnswer: q.correctAnswer,
         explanation: q.explanation,
         category: category,
+        difficulty: difficulty,
       }));
     } catch (error) {
       console.error("Error parsing quiz JSON:", error);
